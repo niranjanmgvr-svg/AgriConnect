@@ -43,7 +43,12 @@ export default function SMSModal({ isOpen, onClose }) {
           <div className="flex items-center gap-2">
             <Smartphone className="w-5 h-5 text-amber-400" />
             <div>
-              <h3 className="font-bold text-sm">Feature Phone SMS Shortcode: 56161</h3>
+              <h3 className="font-bold text-sm flex items-center gap-2">
+                SMS Gateway: 56161
+                <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-2 py-0.5 rounded-full uppercase">
+                  Simulated for Demo
+                </span>
+              </h3>
               <p className="text-[10px] text-slate-400">Offline Fallback for Farmers with No Internet</p>
             </div>
           </div>
@@ -112,7 +117,7 @@ export default function SMSModal({ isOpen, onClose }) {
           <button
             onClick={handleSendSMS}
             disabled={loading}
-            className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2 rounded-xl transition"
+            className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold p-2 rounded-xl transition cursor-pointer"
           >
             <Send className="w-4 h-4" />
           </button>

@@ -56,10 +56,10 @@ export default function VoiceAssistantModal({ isOpen, onClose, onSelectAction })
               <Mic className="w-6 h-6 animate-pulse" />
             </div>
             <div>
-              <h3 className="font-extrabold text-lg flex items-center gap-2">
+              <h3 className="font-extrabold text-lg flex items-center gap-2 flex-wrap">
                 Bhashini Voice AI Assistant
-                <span className="bg-emerald-700 text-amber-300 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase">
-                  GOI Mission
+                <span className="bg-amber-400 text-emerald-950 text-[10px] px-2 py-0.5 rounded-full font-black uppercase">
+                  Simulated for Demo
                 </span>
               </h3>
               <p className="text-xs text-emerald-200">
@@ -127,7 +127,7 @@ export default function VoiceAssistantModal({ isOpen, onClose, onSelectAction })
               className="w-full btn-primary py-3.5 text-sm font-bold shadow-lg flex items-center justify-center gap-2"
             >
               {loading ? <Sparkles className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-              <span>Process Voice Command (Bhashini AI)</span>
+              <span>Process Voice Command (Rule-Based Simulation)</span>
             </button>
           </div>
 

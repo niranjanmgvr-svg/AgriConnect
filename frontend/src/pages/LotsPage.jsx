@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Package, Plus, Sparkles, MapPin, Tag, Calendar, 
-  CheckCircle, ArrowRight, ShieldCheck, Image as ImageIcon, Camera
+  CheckCircle, ArrowRight, ShieldCheck, Image as ImageIcon, Camera, Upload, X
 } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
@@ -25,6 +25,10 @@ export default function LotsPage({ onSelectLot }) {
   const [state, setState] = useState('Uttar Pradesh');
   const [aiGrade, setAiGrade] = useState(null);
 
+  // Photo Upload State
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
   useEffect(() => {
     fetchLots();
   }, []);
@@ -35,6 +39,18 @@ export default function LotsPage({ onSelectLot }) {
       setLots(res.data);
     } catch (err) {
       console.error("Error fetching lots:", err);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -50,6 +66,9 @@ export default function LotsPage({ onSelectLot }) {
   const handleCreateLot = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    const imageUrlToUse = previewUrl || "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop";
+
     try {
       await axios.post('/api/lots', {
         farmer_id: currentUser.id,
@@ -61,9 +80,11 @@ export default function LotsPage({ onSelectLot }) {
         location_mandi: mandi,
         location_district: district,
         location_state: state,
-        images: ["https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop"]
+        images: [imageUrlToUse]
       });
       setShowCreateModal(false);
+      setSelectedFile(null);
+      setPreviewUrl(null);
       fetchLots();
     } catch (err) {
       console.error("Error creating lot:", err);
@@ -90,7 +111,7 @@ export default function LotsPage({ onSelectLot }) {
         {currentUser.role === 'farmer' && (
           <button
             onClick={() => setShowCreateModal(true)}
-            className="btn-primary py-3.5 px-6 text-sm font-bold shadow-lg flex items-center gap-2"
+            className="btn-primary py-3.5 px-6 text-sm font-bold shadow-lg flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-5 h-5" />
             <span>{t('create_lot')}</span>
@@ -202,13 +223,13 @@ export default function LotsPage({ onSelectLot }) {
                     onChange={(e) => setCommodity(e.target.value)}
                     className="w-full border-2 border-slate-300 rounded-xl p-3 focus:border-emerald-600 focus:outline-none"
                   >
-                    <option value="Wheat">Wheat (गेहूं)</option>
-                    <option value="Onion">Onion (प्याज)</option>
-                    <option value="Potato">Potato (आलू)</option>
-                    <option value="Paddy (Dhan)">Paddy / Rice (धान)</option>
-                    <option value="Tomato">Tomato (टमाटर)</option>
-                    <option value="Chana (Gram)">Chana / Gram (चना)</option>
-                    <option value="Mustard">Mustard (सरसों)</option>
+                    <option value="Wheat">Wheat (गेहूं / गहू)</option>
+                    <option value="Onion">Onion (प्याज / कांदा)</option>
+                    <option value="Potato">Potato (आलू / बटाटा)</option>
+                    <option value="Paddy (Dhan)">Paddy / Rice (धान / तांदूळ)</option>
+                    <option value="Tomato">Tomato (टमाटर / टोमॅटो)</option>
+                    <option value="Chana (Gram)">Chana / Gram (चना / हरभरा)</option>
+                    <option value="Mustard">Mustard (सरसों / मोहरी)</option>
                   </select>
                 </div>
 
@@ -264,12 +285,47 @@ export default function LotsPage({ onSelectLot }) {
                 />
               </div>
 
-              {/* Feature 17: MobileNet AI Quality Pre-Check */}
+              {/* Real Photo Upload Input (Task 2) */}
+              <div>
+                <label className="block text-xs font-bold text-slate-500 uppercase mb-1 flex items-center justify-between">
+                  <span>Upload Produce Photo</span>
+                  <span className="text-emerald-700 font-normal lowercase">(optional client preview)</span>
+                </label>
+
+                <div className="border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl p-4 text-center space-y-2 bg-slate-50 relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
+                  />
+
+                  {previewUrl ? (
+                    <div className="relative h-32 w-full rounded-xl overflow-hidden shadow border border-slate-200">
+                      <img src={previewUrl} alt="Crop Preview" className="w-full h-full object-cover" />
+                      <span className="absolute bottom-2 right-2 bg-slate-900/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                        Photo Loaded ✓
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="space-y-1 py-2">
+                      <Camera className="w-8 h-8 text-emerald-600 mx-auto" />
+                      <p className="text-xs text-slate-700 font-bold">Click or drag image file here to upload</p>
+                      <p className="text-[10px] text-slate-400">PNG, JPG or WEBP (Max 5MB)</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Feature 17: MobileNet AI Quality Pre-Check with Task 5 Badge */}
               <div className="bg-slate-900 text-white p-4 rounded-2xl space-y-3 border border-slate-700">
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between flex-wrap gap-2">
                   <div className="flex items-center gap-2 text-xs font-bold text-amber-400">
                     <Sparkles className="w-4 h-4" />
                     MobileNet AI Quality Pre-Check
+                    <span className="bg-amber-400/20 text-amber-300 border border-amber-500/40 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">
+                      Indicative (Rule-Based)
+                    </span>
                   </div>
 
                   <button
@@ -295,6 +351,7 @@ export default function LotsPage({ onSelectLot }) {
                         </span>
                       ))}
                     </div>
+                    <p className="text-[10px] text-amber-400/80 italic pt-1">{aiGrade.disclaimer}</p>
                   </div>
                 )}
               </div>
@@ -310,7 +367,7 @@ export default function LotsPage({ onSelectLot }) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="btn-primary py-3 px-6 text-xs font-bold"
+                  className="btn-primary py-3 px-6 text-xs font-bold cursor-pointer"
                 >
                   Publish Digital Lot Listing
                 </button>

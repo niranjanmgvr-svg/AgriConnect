@@ -108,5 +108,60 @@ export const translations = {
     dispute_flag: "शिकायत / विवाद दर्ज करें",
     voice_assistant: "आवाज सहायक (हिन्दी)",
     sms_fallback: "SMS सेवा (56161)",
+  },
+  mr: {
+    app_title: "ॲग्रीकनेक्ट",
+    tagline: "ॲगमार्कनेट बाजारभाव माहितीवर आधारित शेतकरी व पडताळणीकृत खरेदीदारांचे डिजिटल व्यासपीठ",
+    nav_dashboard: "बाजारभाव",
+    nav_lots: "शेतीमाल लॉट",
+    nav_buyers: "सत्यापित खरेदीदार",
+    nav_transactions: "ऑर्डर व पेमेंट",
+    nav_ledger: "ब्लॉकचेन लेजर",
+    nav_weather: "हवामान सल्ला",
+    nav_schemes: "शासकीय योजना",
+    nav_monitoring: "FPO विश्लेषण",
+    nav_admin: "ॲडमिन पॅनेल",
+    
+    role_farmer: "शेतकरी / FPO प्रतिनिधी",
+    role_buyer: "सत्यापित खरेदीदार",
+    role_admin: "ॲडमिन / मॉडरेटर",
+    role_switch: "भूमिका बदला",
+
+    govt_citation: "अधिकृत भाव स्रोत: भारत सरकार Agmarknet (data.gov.in) व e-NAM पोर्टल",
+
+    price_dashboard_title: "बाजारभाव व मूल्य अंदाज",
+    search_commodity_placeholder: "पिक शोधा (उदा. गहू, बटाटा, कांदा)...",
+    select_mandi: "बाजार समिती निवडा",
+    select_state: "राज्य निवडा",
+
+    sell_hold_advisory: "विक्री करा की ठेवा (Sell vs Hold) सल्ला",
+    explainable_reasoning: "तपशीलवार स्पष्टीकरण नियम",
+    forecast_7d: "७-१४ दिवसांचा भाव अंदाज",
+    confidence_band: "८५% विश्वासार्हता बँड",
+
+    create_lot: "नवीन लॉट तयार करा",
+    crop_name: "पिक / कमोडिटी",
+    variety: "जात / गुणवत्ता",
+    quantity: "प्रमाण (क्विंटलमध्ये)",
+    expected_price: "अपेक्षित दर (₹/क्विंटल)",
+    upload_photos: "पिकाचे फोटो अपलोड करा",
+    ai_quality_grade: "AI गुणवत्ता ग्रेड",
+
+    buyers_directory: "सत्यापित खरेदीदार सूची",
+    gst_verified: "GST व PAN सत्यापित",
+    unverified: "ॲडमिन पडताळणी प्रलंबित",
+
+    negotiation_flow: "प्रस्ताव व वाटाघाटी इतिहास",
+    submit_offer: "प्रस्ताव पाठवा",
+    counter_offer: "प्रति-प्रस्ताव (Counter)",
+    accept_offer: "प्रस्ताव स्वीकारा",
+
+    payment_tracker: "व्यवहार व पेमेंट स्थिती",
+    upi_ref: "UPI संदर्भ क्रमांक",
+    sale_certificate: "विक्री प्रमाणपत्र डाउनलोड करा",
+
+    dispute_flag: "तक्रार / वाद नोंदवा",
+    voice_assistant: "व्हॉइस असिस्टंट (मराठी/हिंदी)",
+    sms_fallback: "SMS सेवा (56161)",
   }
 };

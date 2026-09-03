@@ -97,11 +97,11 @@ export default function TransactionsPage() {
             </div>
 
             {/* Pipeline Visualizer */}
-            <div className="grid grid-cols-4 gap-2 text-center text-xs font-bold py-2 bg-slate-50 rounded-xl border border-slate-100">
-              <div className="text-emerald-700">1. Listed ✓</div>
-              <div className="text-emerald-700">2. Offered ✓</div>
-              <div className="text-emerald-700">3. Accepted ✓</div>
-              <div className={tx.payment_status === 'paid' ? 'text-emerald-700' : 'text-amber-600 animate-pulse'}>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-bold p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+              <div className="text-emerald-700 bg-white p-1.5 rounded-lg border border-slate-100">1. Listed ✓</div>
+              <div className="text-emerald-700 bg-white p-1.5 rounded-lg border border-slate-100">2. Offered ✓</div>
+              <div className="text-emerald-700 bg-white p-1.5 rounded-lg border border-slate-100">3. Accepted ✓</div>
+              <div className={`p-1.5 rounded-lg border border-slate-100 ${tx.payment_status === 'paid' ? 'text-emerald-700 bg-white' : 'text-amber-600 bg-amber-50 animate-pulse'}`}>
                 4. {tx.payment_status === 'paid' ? 'Paid & Sealed ✓' : 'Payment Pending'}
               </div>
             </div>
@@ -125,7 +125,7 @@ export default function TransactionsPage() {
             </div>
 
             {/* Actions & UPI Input */}
-            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
               {tx.upi_ref ? (
                 <div className="text-xs text-slate-600 font-mono bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg flex items-center gap-1.5">
                   <CreditCard className="w-4 h-4 text-emerald-700" />

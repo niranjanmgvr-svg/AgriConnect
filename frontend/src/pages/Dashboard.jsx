@@ -199,9 +199,12 @@ export default function Dashboard({ onSelectLot }) {
             <div className="card-elevated space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
                 <div>
-                  <h3 className="font-extrabold text-lg text-slate-900 flex items-center gap-2">
+                  <h3 className="font-extrabold text-lg text-slate-900 flex items-center gap-2 flex-wrap">
                     <TrendingUp className="w-5 h-5 text-emerald-700" />
                     AI 7-14 Day Price Forecast & Confidence Band
+                    <span className="bg-emerald-100 text-emerald-900 border border-emerald-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">
+                      Statistical Model (Simulated)
+                    </span>
                   </h3>
                   <p className="text-xs text-slate-500 font-medium">
                     Trained on Agmarknet daily price/arrival series for {selectedCommodity} ({selectedMandi})

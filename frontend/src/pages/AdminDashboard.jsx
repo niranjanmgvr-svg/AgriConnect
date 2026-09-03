@@ -151,10 +151,13 @@ export default function AdminDashboard() {
 
         {/* Column 3: AI Fraud & Price-Manipulation Detection Queue */}
         <div className="card-elevated space-y-4">
-          <h3 className="font-extrabold text-base text-slate-900 flex items-center justify-between">
+          <h3 className="font-extrabold text-base text-slate-900 flex items-center justify-between flex-wrap gap-2">
             <span className="flex items-center gap-2">
               <FileSearch className="w-5 h-5 text-amber-500" />
               AI Fraud & Anomaly Flags ({fraudAlerts.length})
+            </span>
+            <span className="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+              Simulated Anomaly Engine
             </span>
           </h3>
 
