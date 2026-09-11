@@ -12,20 +12,18 @@ router = APIRouter(prefix="/api/lots", tags=["Digital Lots & AI Matching"])
 
 # Coordinates dictionary for distance calculation (OpenStreetMap / Haversine)
 CITY_COORDINATES = {
-    "Kanpur Nagar": (26.4499, 80.3319),
-    "Ludhiana": (30.9010, 75.8573),
-    "Nashik": (19.9975, 73.7898),
-    "Indore": (22.7196, 75.8577),
-    "Delhi": (28.6139, 77.2090),
-    "North Delhi": (28.7041, 77.1025),
-    "Amritsar": (31.6340, 74.8723),
-    "Agra": (27.1767, 78.0081),
+    "Bengaluru Rural": (13.2257, 77.5750),
+    "Bengaluru": (12.9716, 77.5946),
     "Kolar": (13.1367, 78.1292),
-    "Bharatpur": (27.2170, 77.4900),
-    "Ujjain": (23.1765, 75.7885),
-    "Rajkot": (22.3039, 70.8022),
-    "Lucknow": (26.8467, 80.9462),
-    "Mumbai": (19.0760, 72.8777),
+    "Raichur": (16.2076, 77.3463),
+    "Belagavi": (15.8497, 74.4977),
+    "Shivamogga": (13.9299, 75.5681),
+    "Mysuru": (12.2958, 76.6394),
+    "Hubballi": (15.3647, 75.1240),
+    "Davanagere": (14.4644, 75.9218),
+    "Chitradurga": (14.2251, 76.3980),
+    "Chikkaballapura": (13.4355, 77.7275),
+    "Hassan": (13.0072, 76.1017),
 }
 
 def haversine_distance(coord1, coord2):
@@ -87,7 +85,7 @@ def create_lot(payload: LotCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Farmer user not found")
 
     images_json = json.dumps(payload.images or [
-        "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop"
+        "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop"
     ])
     
     # Auto-grade lot using MobileNet AI Quality rules
@@ -189,19 +187,10 @@ def get_ai_matched_buyers(lot_id: int, db: Session = Depends(get_db)):
         buyer_coords = CITY_COORDINATES.get(b.district, (28.7041, 77.1025))
         dist_km = haversine_distance(farmer_coords, buyer_coords)
         
-        # 1. Crop Match Score (35%)
-        # All buyers purchase top commodities in our system
-        crop_score = 35.0
+        # 1. Crop Match Score (40%)
+        crop_score = 40.0
         
-        # 2. Quantity Fit Score (20%)
-        # Optimal lot quantity range 20 - 300 qtl
-        qty_fit = 20.0 if (20 <= lot.quantity_qtl <= 300) else 14.0
-        
-        # 3. Rating & Purchase History (20%)
-        rating_score = (b.rating / 5.0) * 20.0
-        
-        # 4. Distance Score (25%)
-        # <100km = 25pt, <300km = 20pt, <500km = 15pt, >500km = 10pt
+        # 2. Distance Score (25%)
         if dist_km <= 100:
             dist_score = 25.0
         elif dist_km <= 300:
@@ -211,13 +200,19 @@ def get_ai_matched_buyers(lot_id: int, db: Session = Depends(get_db)):
         else:
             dist_score = 10.0
 
-        total_score = round(crop_score + qty_fit + rating_score + dist_score, 1)
+        # 3. Volume Fit Score (20%)
+        qty_fit = 20.0 if (20 <= lot.quantity_qtl <= 300) else 14.0
+        
+        # 4. Rating & Reliability Score (15%)
+        rating_score = (b.rating / 5.0) * 15.0
+
+        total_score = round(crop_score + dist_score + qty_fit + rating_score, 1)
 
         reasons = [
-            f"35% Crop Fit: Regular buyer of {lot.commodity} produce",
-            f"25% Proximity: Located {dist_km} km away in {b.district or b.state}",
-            f"20% Trust Rating: {b.rating}/5.0 verified trade rating",
-            f"20% Capacity: Handles volume of {lot.quantity_qtl} quintals"
+            f"40% Crop Match: Regular verified buyer of {lot.commodity}",
+            f"25% Distance/OSM: Located {dist_km} km away in {b.district or b.state}",
+            f"20% Volume Fit: Active purchasing capacity for {lot.quantity_qtl} quintals",
+            f"15% Buyer Rating: {b.rating}/5.0 verified reliability rating"
         ]
 
         matches.append(BuyerMatch(
@@ -237,7 +232,7 @@ def get_ai_matched_buyers(lot_id: int, db: Session = Depends(get_db)):
 
 @router.post("/quality-grade")
 def analyze_crop_quality(
-    commodity: str = Query("Wheat"),
+    commodity: str = Query("Ragi (Finger Millet)"),
     file: Optional[UploadFile] = None
 ):
     """

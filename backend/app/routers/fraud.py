@@ -32,13 +32,13 @@ def get_fraud_and_anomaly_alerts(db: Session = Depends(get_db)):
 
         diff_pct = ((offer_price - bench_price) / bench_price) * 100.0
 
-        if diff_pct < -25.0:
+        if diff_pct < -15.0:
             anomalies.append({
                 "alert_id": f"ANO-OFFER-{o.id}",
-                "type": "UNDERPRICING_ANOMALY",
+                "type": "UNDERPRICING_CARTEL_ANOMALY",
                 "severity": "high",
-                "title": f"Suspicious Low Offer on Lot #{lot.id} ({lot.commodity})",
-                "description": f"Buyer offered ₹{offer_price:,.0f}/qtl, which is {abs(round(diff_pct,1))}% BELOW the Agmarknet benchmark price of ₹{bench_price:,.0f}/qtl.",
+                "title": f"Cartelization Risk: Low Bid on Lot #{lot.id} ({lot.commodity})",
+                "description": f"Buyer bid ₹{offer_price:,.0f}/qtl is {abs(round(diff_pct,1))}% BELOW daily Agmarknet median benchmark (₹{bench_price:,.0f}/qtl). Flagged for potential trader cartelization.",
                 "item_id": o.id,
                 "target_type": "Offer",
                 "recommended_action": "Flag for Admin Review / Contact Farmer regarding potential distress exploitation."

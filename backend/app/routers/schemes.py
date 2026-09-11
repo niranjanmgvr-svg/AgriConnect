@@ -22,7 +22,7 @@ GOVT_SCHEMES_DATABASE = [
         "category": "Crop Insurance & Loss Coverage",
         "benefits": "Comprehensive risk insurance against unseasonal rain, drought, pest attack, and post-harvest losses. Farmer pays low premium (1.5% - 2%).",
         "eligibility_rules": "Farmers growing notified crops in notified areas during Kharif & Rabi seasons.",
-        "eligible_crops": ["Wheat", "Paddy (Dhan)", "Cotton", "Mustard", "Potato", "Soyabean"],
+        "eligible_crops": ["Ragi (Finger Millet)", "Paddy (Sona Masoori)", "Cotton", "Mustard", "Potato", "Soyabean", "Tomato"],
         "min_land_acres": 0.1,
         "max_land_acres": 100.0,
         "official_url": "https://pmfby.gov.in",
@@ -46,7 +46,7 @@ GOVT_SCHEMES_DATABASE = [
         "category": "Equipment Subsidy",
         "benefits": "50% to 80% subsidy on procurement of tractors, harvesters, seeders, and drone sprayers for FPOs and small landholders.",
         "eligibility_rules": "Registered small/marginal farmers, Women farmers, and registered FPOs.",
-        "eligible_crops": ["Wheat", "Paddy (Dhan)", "Maize", "Cotton"],
+        "eligible_crops": ["Ragi (Finger Millet)", "Paddy (Sona Masoori)", "Maize", "Cotton"],
         "min_land_acres": 0.5,
         "max_land_acres": 50.0,
         "official_url": "https://agrimachinery.nic.in",
@@ -68,8 +68,8 @@ GOVT_SCHEMES_DATABASE = [
 
 @router.get("/recommend")
 def recommend_schemes(
-    crop: str = Query("Wheat"),
-    state: str = Query("Uttar Pradesh"),
+    crop: str = Query("Ragi (Finger Millet)"),
+    state: str = Query("Karnataka"),
     land_acres: float = Query(2.5)
 ):
     """

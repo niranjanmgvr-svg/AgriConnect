@@ -63,8 +63,8 @@ def search_prices(
 
 @router.get("/history")
 def get_price_history(
-    commodity: str = Query("Wheat"),
-    mandi: str = Query("Kanpur"),
+    commodity: str = Query("Ragi (Finger Millet)"),
+    mandi: str = Query("Bengaluru"),
     days: int = Query(30),
     db: Session = Depends(get_db)
 ):
@@ -100,8 +100,8 @@ def get_price_history(
 
 @router.get("/forecast", response_model=PriceForecastResponse)
 def get_price_forecast(
-    commodity: str = Query("Wheat"),
-    mandi: str = Query("Kanpur"),
+    commodity: str = Query("Ragi (Finger Millet)"),
+    mandi: str = Query("Bengaluru"),
     forecast_days: int = Query(14),
     db: Session = Depends(get_db)
 ):
@@ -186,12 +186,13 @@ def get_price_forecast(
 
     # Seasonal & plain-language insights engine
     seasonal_insights = {
-        "Wheat": "Post-rabi harvest arrivals are stabilizing. Historical Agmarknet trends show price firming up by 2-4% in coming weeks due to procurement demand.",
-        "Onion": "Lasalgaon & Nashik arrival cycles indicate a seasonal supply tightening. Expect price volatility within a ±8% band depending on monsoon rains.",
-        "Potato": "Cold storage release phase is active across UP & WB mandis. Prices are expected to remain range-bound with minor regional fluctuations.",
-        "Tomato": "Short crop cycle in Kolar & Narayangaon leads to sharp 10-day price swings. Current arrival trends indicate high upside potential.",
-        "Paddy (Dhan)": "Kharif procurement season maintains steady benchmark support near MSP. Price expected to move sideways over 14 days.",
-        "Mustard": "Oilseed mill demand in Rajasthan is strong. Trend indicates steady upside of 3-5% as arrivals taper off."
+        "Ragi (Finger Millet)": "Post-Kharif arrivals in Bengaluru Rural and Mandya mandis are steady. Direct institutional demand from Karnataka food processors is supporting firm prices with 2-4% expected growth.",
+        "Tomato": "Short crop cycle in Kolar APMC cluster leads to active 10-day price trends. High regional demand in South India supports price stability.",
+        "Paddy (Sona Masoori)": "Tungabhadra basin arrivals in Raichur APMC maintain strong benchmark prices. Millers' demand indicates steady 3-5% upside.",
+        "Arecanut (Betel Nut)": "Shivamogga & Uttara Kannada auction arrivals remain strong with high industrial and pan-trader demand.",
+        "Chilli (Byadgi)": "Byadgi APMC market arrivals in Hubballi cluster see high export demand for low-capsaicin high-color varieties.",
+        "Onion": "Chitradurga & Hubballi arrival cycles indicate steady supply. Expect price stability within a ±5% band.",
+        "Cotton": "Davanagere ginning mill demand remains steady. Historical Agmarknet trends show firming prices over the next 14 days."
     }
 
     insight = seasonal_insights.get(

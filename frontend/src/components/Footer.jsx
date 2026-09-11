@@ -17,7 +17,7 @@ export default function Footer() {
             </p>
           </div>
           
-          <div className="flex items-center gap-4 font-medium">
+          <div className="flex items-center gap-3 sm:gap-4 font-medium flex-wrap justify-center text-center">
             <a href="https://data.gov.in" target="_blank" rel="noreferrer" className="hover:text-emerald-400 underline">data.gov.in</a>
             <a href="https://enam.gov.in" target="_blank" rel="noreferrer" className="hover:text-emerald-400 underline">e-NAM Portal</a>
             <a href="https://bhashini.gov.in" target="_blank" rel="noreferrer" className="hover:text-emerald-400 underline">Bhashini Mission</a>

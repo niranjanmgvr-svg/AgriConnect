@@ -9,8 +9,8 @@ router = APIRouter(prefix="/api/advisory", tags=["Advisory Engine"])
 
 @router.get("/recommendation", response_model=AdvisoryResponse)
 def get_sell_hold_advisory(
-    commodity: str = Query("Wheat"),
-    mandi: str = Query("Kanpur"),
+    commodity: str = Query("Ragi (Finger Millet)"),
+    mandi: str = Query("Bengaluru"),
     db: Session = Depends(get_db)
 ):
     """

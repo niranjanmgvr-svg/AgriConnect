@@ -46,17 +46,17 @@ def get_monitoring_dashboard(
     total_farmers = db.query(User).filter(User.role == "farmer").count()
 
     commodity_distribution = [
-        {"commodity": "Wheat", "volume_qtl": 480.0, "share_pct": 38.0, "avg_price": 2420.0},
-        {"commodity": "Onion", "volume_qtl": 320.0, "share_pct": 25.0, "avg_price": 2910.0},
-        {"commodity": "Paddy (Dhan)", "volume_qtl": 290.0, "share_pct": 23.0, "avg_price": 2240.0},
-        {"commodity": "Potato", "volume_qtl": 170.0, "share_pct": 14.0, "avg_price": 1460.0},
+        {"commodity": "Ragi (Finger Millet)", "volume_qtl": 480.0, "share_pct": 38.0, "avg_price": 3480.0},
+        {"commodity": "Tomato", "volume_qtl": 320.0, "share_pct": 25.0, "avg_price": 2180.0},
+        {"commodity": "Paddy (Sona Masoori)", "volume_qtl": 290.0, "share_pct": 23.0, "avg_price": 2580.0},
+        {"commodity": "Arecanut (Betel Nut)", "volume_qtl": 170.0, "share_pct": 14.0, "avg_price": 48500.0},
     ]
 
     district_heatmap = [
-        {"district": "Kanpur Nagar", "state": "Uttar Pradesh", "active_lots": 14, "volume_qtl": 340.0, "realization_uplift": "+6.4%"},
-        {"district": "Nashik", "state": "Maharashtra", "active_lots": 19, "volume_qtl": 510.0, "realization_uplift": "+8.1%"},
-        {"district": "Ludhiana", "state": "Punjab", "active_lots": 11, "volume_qtl": 420.0, "realization_uplift": "+5.2%"},
-        {"district": "Indore", "state": "Madhya Pradesh", "active_lots": 8, "volume_qtl": 280.0, "realization_uplift": "+7.0%"},
+        {"district": "Bengaluru Rural", "state": "Karnataka", "active_lots": 14, "volume_qtl": 340.0, "realization_uplift": "+6.4%"},
+        {"district": "Kolar", "state": "Karnataka", "active_lots": 19, "volume_qtl": 510.0, "realization_uplift": "+8.1%"},
+        {"district": "Raichur", "state": "Karnataka", "active_lots": 11, "volume_qtl": 420.0, "realization_uplift": "+5.2%"},
+        {"district": "Belagavi", "state": "Karnataka", "active_lots": 8, "volume_qtl": 280.0, "realization_uplift": "+7.0%"},
     ]
 
     return {

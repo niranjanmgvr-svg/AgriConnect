@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function BuyerDirectory() {
-  const { t } = useLanguage();
+  const { lang, t } = useLanguage();
   const { currentUser } = useAuth();
   const [buyers, setBuyers] = useState([]);
   const [loading, setLoading] = useState(true);

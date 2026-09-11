@@ -22,8 +22,8 @@ def simulate_sms_action(payload: SMSRequest, db: Session = Depends(get_db)):
     # 1. Check Price SMS Command
     if msg.startswith("PRICE"):
         parts = msg.split()
-        commodity = parts[1] if len(parts) > 1 else "WHEAT"
-        mandi = parts[2] if len(parts) > 2 else "KANPUR"
+        commodity = parts[1] if len(parts) > 1 else "RAGI"
+        mandi = parts[2] if len(parts) > 2 else "BENGALURU"
 
         rec = db.query(PriceRecord).filter(
             PriceRecord.commodity.ilike(f"%{commodity}%"),
@@ -35,7 +35,7 @@ def simulate_sms_action(payload: SMSRequest, db: Session = Depends(get_db)):
                 PriceRecord.commodity.ilike(f"%{commodity}%")
             ).order_by(PriceRecord.price_date.desc()).first()
 
-        price_val = rec.modal_price if rec else 2400.0
+        price_val = rec.modal_price if rec else 3450.0
         reply_sms = f"AgriConnect SMS Alert: {commodity} modal price in {mandi} Mandi today is Rs.{price_val:,.0f}/qtl (Min: Rs.{rec.min_price:,.0f}, Max: Rs.{rec.max_price:,.0f}). Source: Agmarknet."
 
         return {
@@ -45,23 +45,22 @@ def simulate_sms_action(payload: SMSRequest, db: Session = Depends(get_db)):
             "outbound_sms_reply": reply_sms
         }
 
-    # 2. List Lot SMS Command
-    elif msg.startswith("LIST"):
-        # e.g. LIST WHEAT 50 2400
-        parts = msg.split()
-        commodity = parts[1] if len(parts) > 1 else "WHEAT"
+    # 2. List or Sell Lot SMS Command (e.g. 'LIST RAGI 50 3500' or 'SELL RAGI 50Q')
+    elif msg.startswith("LIST") or msg.startswith("SELL"):
+        parts = msg.replace('Q', '').split()
+        commodity = parts[1] if len(parts) > 1 else "RAGI"
         qty = float(parts[2]) if len(parts) > 2 and parts[2].replace('.', '', 1).isdigit() else 50.0
-        price = float(parts[3]) if len(parts) > 3 and parts[3].replace('.', '', 1).isdigit() else 2400.0
+        price = float(parts[3]) if len(parts) > 3 and parts[3].replace('.', '', 1).isdigit() else 3500.0
 
         new_lot = Lot(
-            farmer_id=1, # Default Ramesh Kumar
+            farmer_id=1, # Default Basavaraj Gowda
             commodity=commodity.capitalize(),
             quantity_qtl=qty,
             expected_price_per_qtl=price,
             quality_description="Listed via SMS short-code 56161",
-            location_mandi="Kanpur Mandi",
-            location_district="Kanpur Nagar",
-            location_state="Uttar Pradesh",
+            location_mandi="Bengaluru APMC Mandi",
+            location_district="Bengaluru Rural",
+            location_state="Karnataka",
             status="active"
         )
         db.add(new_lot)

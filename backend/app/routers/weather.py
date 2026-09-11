@@ -31,13 +31,13 @@ def get_weather_risk_alerts(
         return [
             {
                 "id": 99,
-                "state": state or "Uttar Pradesh",
-                "district": district or "Kanpur Nagar",
-                "crop": crop or "Wheat",
-                "alert_type": "heavy_rain",
+                "state": state or "Karnataka",
+                "district": district or "Bengaluru Rural",
+                "crop": crop or "Ragi (Finger Millet)",
+                "alert_type": "moderate_rain",
                 "severity": "warning",
-                "title": "IMD Weather Alert: Light to Moderate Rainfall Forecasted",
-                "description": "Scattered precipitation expected in western and central UP districts over next 48h.",
+                "title": "IMD Karnataka Weather Alert: Light to Moderate Rainfall Forecasted",
+                "description": "Scattered precipitation expected in Bengaluru Rural and Chikkaballapura districts over next 48h.",
                 "advisory": "Ensure field drainage channels are unblocked. Keep harvested crops in elevated covered shelters.",
                 "issued_date": "2026-09-02"
             }

@@ -4,11 +4,12 @@ import {
   MessageSquare, UserCheck, AlertTriangle, ShieldCheck, DollarSign, Send, ArrowRight
 } from 'lucide-react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useAuth } from '../context/AuthContext';
+import { getCropImage, handleCropImageError } from '../utils/cropImages';
 
 export default function LotDetailPage({ lotId, onBack, onNavigateToTx }) {
-  const { t } = useLanguage();
+  const { lang, t, translateCommodity, translateMandi, translateGrade, formatCurrency, formatQuantity } = useLanguage();
   const { currentUser } = useAuth();
   
   const [lot, setLot] = useState(null);
@@ -120,10 +121,10 @@ export default function LotDetailPage({ lotId, onBack, onNavigateToTx }) {
     <div className="space-y-6">
       
       {/* Top Back Navigation */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         <button
           onClick={onBack}
-          className="btn-outline py-2 px-4 text-xs flex items-center gap-1.5 cursor-pointer"
+          className="btn-outline py-2.5 px-4 text-xs flex items-center justify-center gap-1.5 cursor-pointer min-h-[44px]"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Marketplace</span>
@@ -131,9 +132,9 @@ export default function LotDetailPage({ lotId, onBack, onNavigateToTx }) {
 
         <button
           onClick={() => setShowGrievanceModal(true)}
-          className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer"
+          className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 cursor-pointer min-h-[44px]"
         >
-          <AlertTriangle className="w-4 h-4 text-red-600" />
+          <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
           <span>Flag Grievance / Dispute</span>
         </button>
       </div>
@@ -145,19 +146,20 @@ export default function LotDetailPage({ lotId, onBack, onNavigateToTx }) {
           <div className="card-elevated space-y-4">
             <div className="h-52 -mx-5 -mt-5 bg-slate-100 relative overflow-hidden">
               <img 
-                src={lot.images?.[0] || "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop"} 
+                src={lot.images?.[0] && !lot.images[0].includes('1574323347407') ? lot.images[0] : getCropImage(lot.commodity)} 
+                onError={handleCropImageError}
                 alt={lot.commodity}
                 className="w-full h-full object-cover" 
               />
               <span className="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur-sm text-amber-400 text-xs font-black px-3 py-1 rounded-xl">
-                {lot.grade_ai}
+                {translateGrade(lot.grade_ai)}
               </span>
             </div>
 
             <div>
               <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-black text-slate-900">{lot.commodity}</h2>
-                <span className="text-xl font-black text-emerald-800">₹{lot.expected_price_per_qtl}/qtl</span>
+                <h2 className="text-2xl font-black text-slate-900">{translateCommodity(lot.commodity)}</h2>
+                <span className="text-xl font-black text-emerald-800">{formatCurrency(lot.expected_price_per_qtl)}/qtl</span>
               </div>
               <p className="text-xs text-slate-500 font-bold mt-1">
                 Variety: {lot.variety || 'Standard Local'}
@@ -216,6 +218,16 @@ export default function LotDetailPage({ lotId, onBack, onNavigateToTx }) {
                     {mb.match_reasons.slice(0, 2).map((r, i) => (
                       <p key={i}>• {r}</p>
                     ))}
+                  </div>
+
+                  <div className="pt-1 flex items-center justify-between">
+                    <span className="text-[10px] text-slate-400">OSM Verified</span>
+                    <button
+                      onClick={() => alert(`RFQ SMS & Push Notification sent to ${mb.business_name}! Buyer requested to submit quote.`)}
+                      className="bg-emerald-700 hover:bg-emerald-800 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg transition"
+                    >
+                      Notify & Request Quote
+                    </button>
                   </div>
                 </div>
               ))}
@@ -387,7 +399,7 @@ export default function LotDetailPage({ lotId, onBack, onNavigateToTx }) {
       {/* Flag Grievance Modal */}
       {showGrievanceModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <h3 className="font-extrabold text-lg text-slate-900 flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-red-600" />
               {t('dispute_flag')}

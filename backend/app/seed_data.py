@@ -7,52 +7,52 @@ from .database import Base, engine, SessionLocal
 from .models import User, PriceRecord, Lot, Offer, Transaction, LedgerLog, WeatherAlert, Dispute
 
 COMMODITIES_AND_MANDIS = [
-    {"commodity": "Wheat", "state": "Uttar Pradesh", "district": "Kanpur Nagar", "mandi": "Kanpur", "base_price": 2350.0, "volatility": 15},
-    {"commodity": "Wheat", "state": "Punjab", "district": "Ludhiana", "mandi": "Khanna", "base_price": 2420.0, "volatility": 20},
-    {"commodity": "Wheat", "state": "Madhya Pradesh", "district": "Indore", "mandi": "Indore", "base_price": 2510.0, "volatility": 18},
-    {"commodity": "Paddy (Dhan)", "state": "Punjab", "district": "Amritsar", "mandi": "Amritsar", "base_price": 2200.0, "volatility": 25},
-    {"commodity": "Paddy (Dhan)", "state": "Haryana", "district": "Karnal", "mandi": "Karnal", "base_price": 2280.0, "volatility": 20},
-    {"commodity": "Potato", "state": "Uttar Pradesh", "district": "Agra", "mandi": "Agra", "base_price": 1450.0, "volatility": 40},
-    {"commodity": "Potato", "state": "West Bengal", "district": "Hooghly", "mandi": "Tarakeswar", "base_price": 1380.0, "volatility": 35},
-    {"commodity": "Onion", "state": "Maharashtra", "district": "Nashik", "mandi": "Lasalgaon", "base_price": 2850.0, "volatility": 80},
-    {"commodity": "Onion", "state": "Delhi", "district": "North Delhi", "mandi": "Azadpur", "base_price": 3100.0, "volatility": 75},
-    {"commodity": "Tomato", "state": "Karnataka", "district": "Kolar", "mandi": "Kolar", "base_price": 1950.0, "volatility": 90},
-    {"commodity": "Tomato", "state": "Maharashtra", "district": "Pune", "mandi": "Narayangaon", "base_price": 2050.0, "volatility": 85},
-    {"commodity": "Chana (Gram)", "state": "Madhya Pradesh", "district": "Ujjain", "mandi": "Ujjain", "base_price": 5400.0, "volatility": 45},
-    {"commodity": "Mustard", "state": "Rajasthan", "district": "Bharatpur", "mandi": "Bharatpur", "base_price": 5750.0, "volatility": 50},
-    {"commodity": "Soyabean", "state": "Madhya Pradesh", "district": "Ujjain", "mandi": "Ujjain", "base_price": 4650.0, "volatility": 40},
-    {"commodity": "Cotton", "state": "Gujarat", "district": "Rajkot", "mandi": "Rajkot", "base_price": 7200.0, "volatility": 110},
-    {"commodity": "Maize", "state": "Bihar", "district": "Begusarai", "mandi": "Begusarai", "base_price": 2150.0, "volatility": 30},
+    {"commodity": "Ragi (Finger Millet)", "state": "Karnataka", "district": "Bengaluru Rural", "mandi": "Bengaluru", "base_price": 3450.0, "volatility": 25},
+    {"commodity": "Tomato", "state": "Karnataka", "district": "Kolar", "mandi": "Kolar", "base_price": 2150.0, "volatility": 70},
+    {"commodity": "Paddy (Sona Masoori)", "state": "Karnataka", "district": "Raichur", "mandi": "Raichur", "base_price": 2550.0, "volatility": 20},
+    {"commodity": "Cotton", "state": "Karnataka", "district": "Davanagere", "mandi": "Davanagere", "base_price": 7100.0, "volatility": 110},
+    {"commodity": "Maize", "state": "Karnataka", "district": "Haveri", "mandi": "Ranebennur", "base_price": 2250.0, "volatility": 30},
+    {"commodity": "Onion", "state": "Karnataka", "district": "Chitradurga", "mandi": "Chitradurga", "base_price": 2850.0, "volatility": 75},
+    {"commodity": "Tur (Pigeon Pea)", "state": "Karnataka", "district": "Kalaburagi", "mandi": "Kalaburagi", "base_price": 7400.0, "volatility": 60},
+    {"commodity": "Chilli (Byadgi)", "state": "Karnataka", "district": "Dharwad", "mandi": "Hubballi", "base_price": 18500.0, "volatility": 250},
+    {"commodity": "Arecanut (Betel Nut)", "state": "Karnataka", "district": "Shivamogga", "mandi": "Shivamogga", "base_price": 48500.0, "volatility": 350},
+    {"commodity": "Jaggery / Sugarcane", "state": "Karnataka", "district": "Mandya", "mandi": "Mandya", "base_price": 3200.0, "volatility": 40},
+    {"commodity": "Potato", "state": "Karnataka", "district": "Hassan", "mandi": "Hassan", "base_price": 1650.0, "volatility": 35},
+    {"commodity": "Wheat", "state": "Karnataka", "district": "Belagavi", "mandi": "Belagavi", "base_price": 2650.0, "volatility": 20},
 ]
 
 def seed_database():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
 
-    # Check if already seeded
-    if db.query(User).first():
-        print("Database already seeded.")
-        db.close()
-        return
+    # Always recreate or refresh seed if requested
+    db.query(PriceRecord).delete()
+    db.query(LedgerLog).delete()
+    db.query(Transaction).delete()
+    db.query(Offer).delete()
+    db.query(Lot).delete()
+    db.query(WeatherAlert).delete()
+    db.query(User).delete()
+    db.commit()
 
-    print("Seeding AgriConnect database with Agmarknet dataset and initial users...")
+    print("Seeding AgriConnect database with Karnataka APMC Agmarknet dataset...")
 
-    # 1. Users
+    # 1. Users (Karnataka Farmers, Buyers, FPOs & Officers)
     users_data = [
         # Farmers
-        {"id": 1, "name": "Ramesh Kumar", "phone": "9876543210", "role": "farmer", "state": "Uttar Pradesh", "district": "Kanpur Nagar", "rating": 4.9},
-        {"id": 2, "name": "Sukhwinder Singh", "phone": "9876543211", "role": "farmer", "state": "Punjab", "district": "Ludhiana", "rating": 4.8},
-        {"id": 3, "name": "Ganesh Patil", "phone": "9876543212", "role": "farmer", "state": "Maharashtra", "district": "Nashik", "rating": 4.7},
-        {"id": 4, "name": "Kisan Mitra FPO", "phone": "9876543213", "role": "farmer", "state": "Madhya Pradesh", "district": "Indore", "rating": 4.95},
+        {"id": 1, "name": "Basavaraj Gowda", "phone": "9876543210", "role": "farmer", "state": "Karnataka", "district": "Bengaluru Rural", "rating": 4.9},
+        {"id": 2, "name": "Siddappa Pujari", "phone": "9876543211", "role": "farmer", "state": "Karnataka", "district": "Belagavi", "rating": 4.8},
+        {"id": 3, "name": "Ramesh Swamy", "phone": "9876543212", "role": "farmer", "state": "Karnataka", "district": "Raichur", "rating": 4.7},
+        {"id": 4, "name": "Sahyadri Farmers Producer Co.", "phone": "9876543213", "role": "farmer", "state": "Karnataka", "district": "Shivamogga", "rating": 4.95},
         
         # Buyers
-        {"id": 5, "name": "Rajesh Agro Traders", "phone": "9876543220", "role": "buyer", "state": "Delhi", "district": "North Delhi", "gstin_pan": "07AAAAA0000A1Z5", "business_name": "Rajesh Agro Traders Pvt Ltd", "is_verified": True, "rating": 4.9},
-        {"id": 6, "name": "Annapurna Food Processing", "phone": "9876543221", "role": "buyer", "state": "Punjab", "district": "Ludhiana", "gstin_pan": "03BBBBB1111B2Z6", "business_name": "Annapurna Foods", "is_verified": True, "rating": 4.8},
-        {"id": 7, "name": "Maharashtra Mandi Wholesalers", "phone": "9876543222", "role": "buyer", "state": "Maharashtra", "district": "Mumbai", "gstin_pan": "27CCCCC2222C3Z7", "business_name": "MM Wholesalers Co.", "is_verified": True, "rating": 4.6},
-        {"id": 8, "name": "GreenField Retail", "phone": "9876543223", "role": "buyer", "state": "Uttar Pradesh", "district": "Lucknow", "gstin_pan": "09DDDDD3333D4Z8", "business_name": "GreenField Fresh Organics", "is_verified": False, "rating": 4.2},
+        {"id": 5, "name": "Kaveri Agro Traders Pvt Ltd", "phone": "9876543220", "role": "buyer", "state": "Karnataka", "district": "Bengaluru", "gstin_pan": "29AAAAA0000A1Z5", "business_name": "Kaveri Agro Traders", "is_verified": True, "rating": 4.9},
+        {"id": 6, "name": "Karnataka Food Processing Co.", "phone": "9876543221", "role": "buyer", "state": "Karnataka", "district": "Mysuru", "gstin_pan": "29BBBBB1111B2Z6", "business_name": "Mysuru Foods Ltd", "is_verified": True, "rating": 4.8},
+        {"id": 7, "name": "Deccan Wholesalers & Exporters", "phone": "9876543222", "role": "buyer", "state": "Karnataka", "district": "Hubballi", "gstin_pan": "29CCCCC2222C3Z7", "business_name": "Deccan Exports", "is_verified": True, "rating": 4.6},
+        {"id": 8, "name": "Nandi Fresh Organics", "phone": "9876543223", "role": "buyer", "state": "Karnataka", "district": "Chikkaballapura", "gstin_pan": "29DDDDD3333D4Z8", "business_name": "Nandi Fresh Organics", "is_verified": False, "rating": 4.2},
         
         # Admin
-        {"id": 9, "name": "Agmarknet Admin", "phone": "9999999999", "role": "admin", "state": "Delhi", "district": "New Delhi", "is_verified": True, "rating": 5.0}
+        {"id": 9, "name": "Karnataka APMC / NABARD Officer", "phone": "9999999999", "role": "admin", "state": "Karnataka", "district": "Bengaluru", "is_verified": True, "rating": 5.0}
     ]
 
     for u in users_data:
@@ -69,13 +69,12 @@ def seed_database():
         # Generate 60 daily records
         for i in range(60, -1, -1):
             date_str = (today - timedelta(days=i)).strftime("%Y-%m-%d")
-            # Trend component + random fluctuation
             trend = math_sin_wave(i) * 0.05
             day_noise = random.uniform(-vol, vol)
             modal = max(500.0, round(base * (1.0 + trend) + day_noise, 2))
             min_p = round(modal * 0.92, 2)
             max_p = round(modal * 1.08, 2)
-            arrivals = round(random.uniform(50, 450), 1)
+            arrivals = round(random.uniform(100, 850), 1)
 
             records.append(PriceRecord(
                 commodity=item["commodity"],
@@ -91,50 +90,50 @@ def seed_database():
     db.bulk_save_objects(records)
     db.commit()
 
-    # 3. Seed Digital Lots
+    # 3. Seed Digital Lots (Karnataka Produce)
     sample_lots = [
         {
             "farmer_id": 1,
-            "commodity": "Wheat",
-            "variety": "Sharbati A-Grade",
-            "quantity_qtl": 80.0,
-            "expected_price_per_qtl": 2400.0,
-            "quality_description": "Clean, golden grain. Moisture level below 11%. Sourced from rainfed harvest.",
+            "commodity": "Ragi (Finger Millet)",
+            "variety": "GPU-28 Premium Grade",
+            "quantity_qtl": 100.0,
+            "expected_price_per_qtl": 3500.0,
+            "quality_description": "Clean, sun-dried organic Ragi grains harvested from Bengaluru Rural region. Moisture < 10%.",
             "grade_ai": "Grade A (Indicative AI)",
-            "grade_defects_json": json.dumps(["Moisture 10.5%", "Foreign matter 0.8%"]),
-            "location_mandi": "Kanpur Mandi",
-            "location_district": "Kanpur Nagar",
-            "location_state": "Uttar Pradesh",
-            "images_json": json.dumps(["https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=600&auto=format&fit=crop"]),
+            "grade_defects_json": json.dumps(["Moisture 9.8%", "Foreign matter 0.5%"]),
+            "location_mandi": "Bengaluru APMC Mandi",
+            "location_district": "Bengaluru Rural",
+            "location_state": "Karnataka",
+            "images_json": json.dumps(["https://images.unsplash.com/photo-1615485290382-441e4d049cb5?w=600&auto=format&fit=crop"]),
             "status": "active"
         },
         {
             "farmer_id": 3,
-            "commodity": "Onion",
-            "variety": "Red Nashik Quality",
-            "quantity_qtl": 120.0,
-            "expected_price_per_qtl": 2900.0,
-            "quality_description": "Medium to large size red onions, firm bulb structure, standard grading.",
+            "commodity": "Tomato",
+            "variety": "Kolar Red Hybrid",
+            "quantity_qtl": 150.0,
+            "expected_price_per_qtl": 2200.0,
+            "quality_description": "Firm, ripe red tomatoes from Kolar cluster. High shelf life and uniform sizing.",
             "grade_ai": "Grade A (Indicative AI)",
-            "grade_defects_json": json.dumps(["Uniform size 85%", "Skin tightness high"]),
-            "location_mandi": "Lasalgaon Mandi",
-            "location_district": "Nashik",
-            "location_state": "Maharashtra",
-            "images_json": json.dumps(["https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=600&auto=format&fit=crop"]),
+            "grade_defects_json": json.dumps(["Uniform size 90%", "High firmness index"]),
+            "location_mandi": "Kolar APMC Mandi",
+            "location_district": "Kolar",
+            "location_state": "Karnataka",
+            "images_json": json.dumps(["https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=600&auto=format&fit=crop"]),
             "status": "active"
         },
         {
             "farmer_id": 2,
-            "commodity": "Paddy (Dhan)",
-            "variety": "PR-126 Basmati Hybrid",
-            "quantity_qtl": 150.0,
-            "expected_price_per_qtl": 2250.0,
-            "quality_description": "Freshly threshed paddy, high grain length, minimal breakage.",
-            "grade_ai": "Grade B (Indicative AI)",
-            "grade_defects_json": json.dumps(["Moisture 13.2%", "Broken grain 2.1%"]),
-            "location_mandi": "Amritsar Mandi",
-            "location_district": "Amritsar",
-            "location_state": "Punjab",
+            "commodity": "Paddy (Sona Masoori)",
+            "variety": "Sona Masoori Raw Paddy",
+            "quantity_qtl": 200.0,
+            "expected_price_per_qtl": 2600.0,
+            "quality_description": "Aged Sona Masoori paddy from Tungabhadra basin in Raichur. Minimal breakage.",
+            "grade_ai": "Grade A (Indicative AI)",
+            "grade_defects_json": json.dumps(["Moisture 11.2%", "Broken grain 1.5%"]),
+            "location_mandi": "Raichur APMC Mandi",
+            "location_district": "Raichur",
+            "location_state": "Karnataka",
             "images_json": json.dumps(["https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&auto=format&fit=crop"]),
             "status": "offered"
         }
@@ -148,11 +147,11 @@ def seed_database():
     # 4. Sample Offer & Transaction
     sample_offer = Offer(
         lot_id=3,
-        buyer_id=6, # Annapurna Foods
-        offered_price_per_qtl=2220.0,
-        quantity_qtl=150.0,
-        delivery_date="2026-09-10",
-        notes="We will arrange pickup from farm site with immediate bank payment.",
+        buyer_id=6, # Karnataka Food Processing Co.
+        offered_price_per_qtl=2580.0,
+        quantity_qtl=200.0,
+        delivery_date="2026-09-12",
+        notes="Pickup arranged directly from Raichur APMC yard with instant bank payout.",
         status="accepted"
     )
     db.add(sample_offer)
@@ -163,9 +162,9 @@ def seed_database():
         offer_id=sample_offer.id,
         farmer_id=2,
         buyer_id=6,
-        final_price_per_qtl=2220.0,
-        total_amount=333000.0,
-        upi_ref="UPI/329481048201/PAYMENT_DONE",
+        final_price_per_qtl=2580.0,
+        total_amount=516000.0,
+        upi_ref="UPI/329481048201/KA_PAYMENT_SUCCESS",
         payment_status="paid",
         delivery_status="delivered",
         certificate_hash="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
@@ -174,7 +173,7 @@ def seed_database():
     db.commit()
 
     # 5. Ledger Genesis Log
-    init_data = json.dumps({"event": "LOT_CREATED", "lot_id": 3, "price": 2250.0})
+    init_data = json.dumps({"event": "LOT_CREATED", "lot_id": 3, "price": 2600.0})
     init_hash = hashlib.sha256(f"0000000000000000000000000000000000000000000000000000000000000000_{init_data}".encode()).hexdigest()
     
     db.add(LedgerLog(
@@ -187,28 +186,28 @@ def seed_database():
     ))
     db.commit()
 
-    # 6. IMD Weather Alerts
+    # 6. IMD Weather Alerts (Karnataka Clusters)
     weather_data = [
         {
-            "state": "Uttar Pradesh",
-            "district": "Kanpur Nagar",
-            "crop": "Wheat",
-            "alert_type": "heavy_rain",
+            "state": "Karnataka",
+            "district": "Bengaluru Rural",
+            "crop": "Ragi (Finger Millet)",
+            "alert_type": "moderate_rain",
             "severity": "warning",
-            "title": "IMD Weather Warning: Unseasonal Moderate to Heavy Rainfall Expected",
-            "description": "India Meteorological Department (IMD) forecasts widespread light to moderate rainfall with thundershowers over Kanpur and surrounding districts in the next 48 hours.",
-            "advisory": "Drain excess water from wheat fields immediately. Delay post-harvest drying until skies clear. Store harvested grain in elevated covered platforms.",
+            "title": "IMD Karnataka Warning: Light to Moderate Showers Forecast in Bengaluru Rural",
+            "description": "India Meteorological Department (IMD Bengaluru) forecasts light to moderate showers over Bengaluru Rural and Chikkaballapura districts over the next 48 hours.",
+            "advisory": "Ensure proper drainage in Ragi fields. Keep harvested produce in dry, covered APMC storage sheds.",
             "issued_date": (today - timedelta(days=1)).strftime("%Y-%m-%d")
         },
         {
-            "state": "Maharashtra",
-            "district": "Nashik",
-            "crop": "Onion",
+            "state": "Karnataka",
+            "district": "Kolar",
+            "crop": "Tomato",
             "alert_type": "pest_risk",
             "severity": "critical",
-            "title": "IMD Agriculture Advisory: High Humidity Pest Infection Alert for Onion",
-            "description": "Relative humidity (>85%) combined with warm night temperatures creates conducive environment for Purple Blotch and Stemphylium blight fungal infection in onion crops.",
-            "advisory": "Apply prophylactic spray of Mancozeb @ 2.5g/L or Dithane M-45. Avoid excessive nitrogen fertilizer applications during humid weather.",
+            "title": "IMD Karnataka Advisory: High Humidity Blight Risk Alert for Kolar Tomato Cluster",
+            "description": "High relative humidity (>88%) and night dew in Kolar APMC belt poses high risk for Early Blotch fungal infection in tomato crops.",
+            "advisory": "Apply protective spray of Copper Oxychloride @ 3g/L. Ensure adequate plant spacing to prevent crop disease spread.",
             "issued_date": today.strftime("%Y-%m-%d")
         }
     ]
@@ -218,7 +217,7 @@ def seed_database():
     db.commit()
 
     db.close()
-    print("Database seeding completed successfully.")
+    print("Database seeding with Karnataka APMC dataset completed successfully.")
 
 def math_sin_wave(day_idx):
     import math

@@ -23,5 +23,5 @@
 }
 
 .card-elevated {
-  @apply bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all duration-200;
+  @apply bg-white border border-slate-200 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all duration-200;
 }
